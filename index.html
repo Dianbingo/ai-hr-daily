@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>每日 AI+HR 日报</title>
+<style>
+  :root{
+    --bg1:#F5F3FE; --bg2:#E6E2FB; --card:#FFFFFF;
+    --orange:#6E5BE6; --orange-d:#534AB7; --amber:#9D8FF0;
+    --ink:#1B1830; --ink2:#5A5670; --ink3:#9591AB;
+    --line:rgba(83,74,183,.16); --hi:rgba(110,91,230,.16);
+    --green:#1D9E75;
+    --soft:#EEEBFB; --soft-b:#DAD4F6; --chip:#E8E4FA;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{background:var(--bg1);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;
+    -webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:480px;margin:0 auto;min-height:100vh;
+    background:linear-gradient(180deg,#F6F4FE 0%,#ECE8FC 100%);
+    padding:0 18px 40px;position:relative;overflow:hidden}
+
+  /* top nav */
+  .nav{position:sticky;top:0;z-index:20;background:rgba(246,244,254,.86);
+    backdrop-filter:saturate(150%) blur(10px);
+    display:flex;align-items:center;gap:8px;padding:14px 18px 12px;margin:0 -18px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--orange)}
+  .nav b{font-size:15px;font-weight:600;letter-spacing:.5px}
+  .nav .upd{font-size:11px;color:var(--ink3);margin-left:6px}
+  .nav .seg{margin-left:auto;display:flex;gap:6px}
+  .seg a{font-size:12px;color:var(--ink2);padding:5px 11px;border-radius:20px}
+  .seg a.on{background:var(--chip);color:var(--orange-d);font-weight:600}
+
+  /* date pill */
+  .date{display:inline-flex;align-items:center;gap:7px;background:#fff;
+    border:1px solid var(--line);border-radius:24px;padding:8px 16px;
+    font-size:13px;color:var(--ink2);margin:18px auto 0}
+  .date .gdot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+  .center{display:flex;justify-content:center}
+
+  /* hero */
+  .hero{text-align:center;margin-top:18px}
+  .hero h1{font-size:30px;line-height:1.25;font-weight:800;letter-spacing:.5px}
+  .hero h1 .k{position:relative;color:var(--orange);z-index:1}
+  .hero h1 .k::after{content:"";position:absolute;left:-2px;right:-2px;bottom:2px;height:10px;
+    background:var(--hi);z-index:-1;border-radius:3px}
+  .hero p{font-size:14px;color:var(--ink2);line-height:1.7;margin-top:14px;padding:0 6px}
+  .hero p b{color:var(--orange-d);font-weight:600}
+  .meta-line{text-align:center;font-size:12px;color:var(--ink3);margin-top:12px}
+
+  /* key numbers */
+  .keyhd{display:flex;align-items:center;gap:8px;margin:26px 2px 0}
+  .keyhd .ic{width:22px;height:22px;border-radius:7px;background:var(--chip);color:var(--orange-d);
+    display:flex;align-items:center;justify-content:center;font-size:13px}
+  .keyhd h2{font-size:15px;font-weight:600}
+  .keyhd .tip{margin-left:auto;font-size:11px;color:var(--ink3)}
+  .knums{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
+  .kn{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:18px 8px 14px;text-align:center;display:block}
+  .kn .big{font-size:26px;font-weight:800;color:var(--orange);line-height:1}
+  .kn .big small{font-size:13px;font-weight:700}
+  .kn .lab{font-size:11px;color:var(--ink3);margin-top:8px;line-height:1.4}
+  .kn .src{font-size:10px;color:var(--orange-d);margin-top:7px;border-top:1px dashed var(--line);
+    padding-top:6px;display:inline-flex;align-items:center;gap:2px}
+
+  /* section title */
+  .sec{display:flex;align-items:center;gap:9px;margin:32px 2px 4px}
+  .sec .star{width:26px;height:26px;border-radius:8px;background:var(--chip);color:var(--orange-d);
+    display:flex;align-items:center;justify-content:center;font-size:14px}
+  .sec h2{font-size:18px;font-weight:700}
+  .sec .meta{font-size:12px;color:var(--ink3);margin-left:2px;align-self:flex-end;margin-bottom:2px}
+  .sec .cnt{margin-left:auto;font-size:12px;color:var(--orange-d);background:var(--soft);
+    padding:4px 11px;border-radius:20px;font-weight:600;align-self:center}
+  .hint{font-size:12px;color:var(--ink3);margin:8px 2px 0}
+
+  /* news card */
+  .card{background:var(--card);border-radius:18px;margin-top:14px;overflow:hidden;
+    border:1px solid var(--line);box-shadow:0 6px 20px rgba(83,74,183,.06)}
+  .card .bar{height:3px;background:linear-gradient(90deg,var(--orange),var(--amber))}
+  .card .pad{padding:16px 16px 16px}
+  .crow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .no{font-size:12px;font-weight:700;color:var(--orange-d);border:1.5px solid var(--soft-b);
+    border-radius:8px;padding:3px 8px;letter-spacing:.5px}
+  .time{font-size:11px;color:var(--ink3);margin-left:auto;display:inline-flex;align-items:center;gap:3px}
+  .time::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--amber)}
+  .tag{font-size:11px;padding:3px 9px;border-radius:7px;font-weight:600}
+  .tag.head{background:var(--orange);color:#fff}
+  .tag.grade{background:var(--soft);color:var(--orange-d);border:1px solid var(--soft-b)}
+  .card h3{font-size:19px;line-height:1.4;font-weight:800;margin-top:12px;letter-spacing:.2px}
+  .card h3 .k{color:var(--orange)}
+  .card .sum{font-size:13.5px;color:var(--ink2);line-height:1.7;margin-top:10px}
+  .card .sum b{color:var(--ink);font-weight:600}
+
+  .mini{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .mini .m{background:#F7F5FD;border:1px solid #EAE6F8;border-radius:12px;padding:13px 12px;text-align:center}
+  .mini .m .v{font-size:22px;font-weight:800;color:var(--orange)}
+  .mini .m .v small{font-size:13px;font-weight:700}
+  .mini .m .t{font-size:11.5px;color:var(--ink3);margin-top:5px}
+
+  .src{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px;padding-top:13px;border-top:1px dashed var(--line);align-items:center}
+  .src .lbl{font-size:11px;color:var(--ink3)}
+  .src .s{font-size:11px;color:var(--orange-d);border:1px solid var(--soft-b);border-radius:6px;padding:3px 8px}
+  .src .s.link:active{background:var(--soft)}
+
+  .readmore{display:flex;align-items:center;justify-content:space-between;
+    margin-top:14px;background:var(--soft);border:1px solid var(--soft-b);border-radius:12px;
+    padding:12px 14px;font-size:13.5px;font-weight:600;color:var(--orange-d)}
+  .readmore .arr{font-size:15px}
+  .readmore.disabled{background:#F2F1F6;border-color:#E6E3EE;color:var(--ink3);font-weight:400}
+
+  /* footer */
+  .foot{text-align:center;margin-top:34px;color:var(--ink3);font-size:12px;line-height:1.9}
+  .foot b{color:var(--orange-d)}
+  .tagrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+  .tagrow span{font-size:12px;color:var(--orange-d);border:1px solid var(--soft-b);border-radius:20px;padding:6px 13px}
+  .disclaim{margin-top:16px;color:#ADA8C0;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="nav">
+    <span class="dot"></span><b>AI+HR · 日报</b>
+    <span class="upd">每日 08:00 更新</span>
+  </div>
+
+  <div class="center"><div class="date"><span class="gdot"></span><span id="dateText"></span></div></div>
+
+  <div class="hero">
+    <h1>近日 <span class="k">AI+HR</span> 发生了什么</h1>
+    <p>聚焦<b>有方法、有前沿、能落地</b>：从 HR 2030 智能体框架、AI 成熟度自测尺，到 AI 内容创作与人才结构变化。</p>
+    <div class="meta-line" id="metaLine"></div>
+  </div>
+
+  <div class="keyhd">
+    <span class="ic">&#9670;</span><h2>今日关键数字</h2>
+    <span class="tip">点击数字可查看出处</span>
+  </div>
+  <div class="knums" id="keynums"></div>
+
+  <div class="sec">
+    <span class="star">&#9733;</span><h2>今日重点</h2>
+    <span class="meta">/ 值得关注</span>
+    <span class="cnt" id="cntText">5 条</span>
+  </div>
+  <div class="hint">编号 01–05 · 可点击「查看原文」追溯细节</div>
+
+  <div id="cards"></div>
+
+  <div class="foot">
+    关注我，每天 <b>3 分钟</b> 读懂 AI+HR
+    <div class="tagrow">
+      <span>#AI+HR</span><span>#HR日报</span><span>#AI裁员</span><span>#HR科技</span><span>#欧盟AI法案</span>
+    </div>
+    <p class="disclaim">内容由 AI 辅助整理，结论与数据请以原文为准</p>
+  </div>
+</div>
+
+<script>
+const DATA = {
+  date: "2026-06-25 · 周四 · 北京时间",
+  count: { total: 46, key: 5, insight: 0 },
+  keyNumbers: [
+    { v:"75", u:"%", lab:"HR 战略工作占比将提升至", src:"Josh Bersin", url:"https://www.prnewswire.com/news-releases/the-josh-bersin-company-launches-bold-blueprint-for-agentic-ai-hr-2030-302793868.html" },
+    { v:"10-100", u:"×", lab:"AI 赋能 vs 单纯裁员的价值", src:"Josh Bersin", url:"https://www.prnewswire.com/news-releases/the-josh-bersin-company-launches-bold-blueprint-for-agentic-ai-hr-2030-302793868.html" },
+    { v:"40", u:"%", lab:"AI智能体人才需求增速", src:"猎聘×清华", url:"https://new.qq.com/rain/a/20260618A04X5K00" }
+  ],
+  cards: [
+    {
+      no:"01", head:true, grade:"S 级 · 一手报告", time:"6月8日发布",
+      title:["HR 2030 框架","HRBP 将变「智能体管理者」"], hi:"智能体管理者",
+      summary:"全球顶级分析师 Josh Bersin 发布《HR 2030》蓝图，提出 12 条系统性原则：HR 从「流程执行者」转向<b>设计、调教、管理 AI 智能体系统</b>。关键判断——靠 AI 加速招聘与再培训创造的价值，是单纯用 AI 减员的 <b>10–100 倍</b>。HR 团队或缩减 30–50%，但战略工作占比从 30% 升至 75%。",
+      mini:[ {v:"12",u:"条",t:"系统性转型原则"}, {v:"130",u:"个",t:"可部署HR智能体"},
+             {v:"95",u:"项",t:"HR专属智能体能力"}, {v:"75",u:"%",t:"战略工作占比目标"} ],
+      sources:[ {name:"PR Newswire",url:"https://www.prnewswire.com/news-releases/the-josh-bersin-company-launches-bold-blueprint-for-agentic-ai-hr-2030-302793868.html"}, {name:"红杉汇",url:"https://www.hongshan.com/article/%E7%9F%A5%E5%90%8D%E5%88%86%E6%9E%90%E5%B8%88%E7%9C%BC%E4%B8%ADhr%E7%9A%84%E6%9C%AA%E6%9D%A5%EF%BC%9A%E7%B3%BB%E7%BB%9F%E6%80%A7%E5%8F%98%E5%8C%96%E5%A4%9A%E8%BE%BE12%E6%9D%A1/"} ],
+      readUrl:"https://www.hongshan.com/article/%E7%9F%A5%E5%90%8D%E5%88%86%E6%9E%90%E5%B8%88%E7%9C%BC%E4%B8%ADhr%E7%9A%84%E6%9C%AA%E6%9D%A5%EF%BC%9A%E7%B3%BB%E7%BB%9F%E6%80%A7%E5%8F%98%E5%8C%96%E5%A4%9A%E8%BE%BE12%E6%9D%A1/"
+    },
+    {
+      no:"02", grade:"A 级 · 方法论框架", time:"6月发布",
+      title:["可直接套用","AI in HR 的四级成熟度模型"], hi:"四级成熟度",
+      summary:"SAP × Josh Bersin《Superworker》报告给出一把自测尺：AI 在 HR 的应用分四级——<b>助手</b>(自动化简单任务)→<b>智能体</b>(接管常规流程)→<b>多功能智能体</b>(优化工作流、支持决策)→<b>自主智能体</b>(运行完整流程)。核心不是裁人，而是把员工变「超级员工」。HR 可对照定位自己处在哪一级、下一步往哪走。",
+      mini:[ {v:"4",u:"级",t:"AI成熟度阶段"}, {v:"L1",u:"助手",t:"多数企业现状"},
+             {v:"L4",u:"自主",t:"领先者目标"}, {v:"1",u:"把尺",t:"可自测落地路径"} ],
+      sources:[ {name:"SAP × Josh Bersin",url:"https://www.sap.com/hungary/blogs/ai-in-hr-empowering-superworkers"} ],
+      readUrl:"https://www.sap.com/hungary/blogs/ai-in-hr-empowering-superworkers"
+    },
+    {
+      no:"03", grade:"实操分享 · 案例拆解", time:"2026年峰会披露",
+      title:["前沿实操｜AI 做播客","制作周期从 60 天压到 1 天"], hi:"60 天压到 1 天",
+      summary:"<b>本期实操分享</b>——喜马拉雅音频大模型实践：有声内容制作周期三代演进 <b>60 天 → 30 天 → 1 天（提速 30 倍）</b>，<b>10 秒</b>克隆商用声线、56 种情感合成，单田芳声音重现上线 100+ 专辑、总播放超 <b>1 亿</b>。<b>可上手工作流</b>：选题脚本(LLM)→ AI 配音/克隆音色 → AI 剪辑配字幕 BGM → 一键多平台分发。HR 与品牌团队据此可低成本做内部播客、领导访谈、文化宣传片。",
+      mini:[ {v:"30",u:"×",t:"内容制作提速"}, {v:"10",u:"秒",t:"克隆商用声线"},
+             {v:"56",u:"种",t:"情感语音合成"}, {v:"4",u:"步",t:"可复用工作流"} ],
+      sources:[ {name:"腾讯云开发者",url:"https://cloud.tencent.com/developer/article/2650685"}, {name:"喜马拉雅",url:"https://cloud.tencent.com/developer/article/2650685"} ],
+      readUrl:"https://cloud.tencent.com/developer/article/2650685"
+    },
+    {
+      no:"04", grade:"S 级 · 联合报告", time:"6月17日发布",
+      title:["职场 K 型分化","缺口不在人数在「技能结构」"], hi:"K 型分化",
+      summary:"猎聘×清华《AI 时代技能趋势报告》：一边日均裁员近千人，一边 AI 智能体人才需求增速 <b>40%</b>、领军人才两年翻倍、AI 科学家月薪 <b>13.7 万</b>；但 1 年以下经验的机器学习岗需求骤降 71%。HR 启示：招聘与盘点要从「学历/资历」转向<b>「算法+应用+智能体」复合技能图谱</b>。",
+      mini:[ {v:"40",u:"%",t:"AI智能体需求增速"}, {v:"13.7",u:"万",t:"AI科学家月薪"},
+             {v:"-71",u:"%",t:"低经验ML岗需求"}, {v:"2",u:"倍",t:"领军人才两年翻"} ],
+      sources:[ {name:"猎聘×清华报告",url:"https://new.qq.com/rain/a/20260618A04X5K00"}, {name:"脉脉洞察",url:"https://www.yeyulingfeng.com/a/777762.html"} ],
+      readUrl:"https://new.qq.com/rain/a/20260618A04X5K00"
+    },
+    {
+      no:"05", grade:"A 级 · 全球调查", time:"2026年度调查",
+      title:["招聘风向标","AI 技能首超工程成最难招"], hi:"最难招",
+      summary:"ManpowerGroup 2026 全球人才短缺调查：AI 技能<b>首次超越所有其他技能</b>成最难招能力，超过传统工程与 IT。<b>72%</b> 雇主报告招聘困难，缺口前两位是「AI 模型与应用开发」(20%) 与「AI 素养」(19%)。给 HR 的动作：与其外部硬抢，不如把<b>「AI 素养」纳入全员培训与内部转岗</b>。",
+      mini:[ {v:"72",u:"%",t:"雇主招聘困难"}, {v:"1",u:"st",t:"AI技能最难招"},
+             {v:"20",u:"%",t:"AI开发缺口居首"}, {v:"19",u:"%",t:"AI素养缺口第二"} ],
+      sources:[ {name:"ManpowerGroup",url:"https://www.yeyulingfeng.com/a/777762.html"} ],
+      readUrl:"https://www.yeyulingfeng.com/a/777762.html"
+    }
+  ]
+};
+
+(function(){
+  const $ = id => document.getElementById(id);
+  $('dateText').textContent = DATA.date;
+  $('metaLine').textContent = '今日扫描 '+DATA.count.total+' 条 · 过三道质量门后精选 '+DATA.count.key+' 条重点';
+  $('cntText').textContent = DATA.count.key + ' 条';
+
+  $('keynums').innerHTML = DATA.keyNumbers.map(k=>{
+    const inner = '<div class="big">'+k.v+'<small>'+k.u+'</small></div>'+
+                  '<div class="lab">'+k.lab+'</div>'+
+                  '<div class="src">'+k.src+' &#8599;</div>';
+    return k.url
+      ? '<a class="kn" href="'+k.url+'" target="_blank" rel="noopener">'+inner+'</a>'
+      : '<div class="kn">'+inner+'</div>';
+  }).join('');
+
+  const box = $('cards');
+  DATA.cards.forEach(c=>{
+    const tags = (c.head?'<span class="tag head">★ 头条</span>':'')+
+                 '<span class="tag grade">'+c.grade+'</span>';
+    const time = c.time ? '<span class="time">'+c.time+'</span>' : '';
+    const title = c.title.map(line=>
+      (c.hi && line.includes(c.hi)) ? line.replace(c.hi,'<span class="k">'+c.hi+'</span>') : line
+    ).join('<br>');
+    const mini = c.mini.map(m=>
+      '<div class="m"><div class="v">'+m.v+'<small>'+m.u+'</small></div><div class="t">'+m.t+'</div></div>'
+    ).join('');
+    const src = '<span class="lbl">依据 · 来源</span>'+ c.sources.map(s=>
+      s.url ? '<a class="s link" href="'+s.url+'" target="_blank" rel="noopener">'+s.name+' &#8599;</a>'
+            : '<span class="s">'+s.name+'</span>'
+    ).join('');
+    const read = c.readUrl
+      ? '<a class="readmore" href="'+c.readUrl+'" target="_blank" rel="noopener"><span>查看原文 · 追溯细节</span><span class="arr">&#8594;</span></a>'
+      : '<div class="readmore disabled"><span>原文链接待补充</span><span class="arr">&#8594;</span></div>';
+    box.insertAdjacentHTML('beforeend',
+      '<div class="card"><div class="bar"></div><div class="pad">'+
+      '<div class="crow"><span class="no">'+c.no+'</span>'+tags+time+'</div>'+
+      '<h3>'+title+'</h3>'+
+      '<div class="sum">'+c.summary+'</div>'+
+      '<div class="mini">'+mini+'</div>'+
+      '<div class="src">'+src+'</div>'+
+      read+
+      '</div></div>');
+  });
+})();
+</script>
+</body>
+</html>
