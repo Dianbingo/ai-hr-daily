@@ -28,10 +28,31 @@
     display:flex;align-items:center;gap:8px;padding:14px 18px 12px;margin:0 -18px}
   .dot{width:8px;height:8px;border-radius:50%;background:var(--orange)}
   .nav b{font-size:15px;font-weight:600;letter-spacing:.5px}
-  .nav .upd{font-size:11px;color:var(--ink3);margin-left:6px}
-  .nav .seg{margin-left:auto;display:flex;gap:6px}
-  .seg a{font-size:12px;color:var(--ink2);padding:5px 11px;border-radius:20px}
-  .seg a.on{background:var(--chip);color:var(--orange-d);font-weight:600}
+  .nav .cal{width:34px;height:34px;border-radius:10px;background:var(--chip);
+    margin-left:auto;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;position:relative}
+  .nav .cal svg{width:18px;height:18px;fill:none;stroke:var(--orange-d);stroke-width:1.8}
+  .nav .cal .bday{position:absolute;top:-4px;right:-4px;width:7px;height:7px;
+    border-radius:50%;background:var(--orange);border:1.5px solid #fff}
+
+  /* calendar overlay */
+  .cal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;
+    background:rgba(27,24,48,.35);display:none;align-items:center;justify-content:center}
+  .cal-overlay.on{display:flex}
+  .cal-box{background:#fff;border-radius:20px;padding:20px 18px 24px;width:320px;
+    box-shadow:0 12px 40px rgba(83,74,183,.18)}
+  .cal-box .cal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .cal-hd .arr{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
+    background:#fff;display:flex;align-items:center;justify-content:center;
+    font-size:16px;color:var(--ink2);cursor:pointer}
+  .cal-hd .ym{font-size:15px;font-weight:600}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;gap:4px}
+  .cal-grid .wk{font-size:11px;color:var(--ink3);padding:6px 0}
+  .cal-grid .dy{font-size:13px;padding:8px 0;border-radius:10px;cursor:default;color:#C8C4D6}
+  .cal-grid .dy.has{background:var(--soft);color:var(--orange-d);font-weight:700;cursor:pointer}
+  .cal-grid .dy.has:active{background:var(--chip)}
+  .cal-grid .dy.today{border:1.5px solid var(--orange)}
+  .cal-grid .dy.active{background:var(--orange);color:#fff}
 
   /* date pill */
   .date{display:inline-flex;align-items:center;gap:7px;background:#fff;
@@ -122,13 +143,25 @@
 <div class="wrap">
   <div class="nav">
     <span class="dot"></span><b>AI+HR · 日报</b>
+    <span class="cal" id="calBtn"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg><span class="bday" id="bdot"></span></span>
+  </div>
+
+  <div class="cal-overlay" id="calOverlay">
+    <div class="cal-box">
+      <div class="cal-hd">
+        <span class="arr" id="calPrev">&#8249;</span>
+        <span class="ym" id="calYM"></span>
+        <span class="arr" id="calNext">&#8250;</span>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
   </div>
 
   <div class="center"><div class="date"><span class="gdot"></span><span id="dateText"></span></div></div>
 
   <div class="hero">
     <h1>近日 <span class="k">AI+HR</span> 发生了什么</h1>
-    <p>聚焦<b>有方法、有前沿、能落地</b>：从 HR 2030 智能体框架、AI 成熟度自测尺，到 AI 内容创作与人才结构变化。</p>
+    <p>聚焦<b>有方法、有前沿、能落地</b>：从 AI 赋能 HR、AI 与互联网行业趋势，到 AI 内容创作前沿分享。</p>
     <div class="meta-line" id="metaLine"></div>
   </div>
 
@@ -157,51 +190,92 @@
 </div>
 
 <script>
-const DATA = {
-  date: "2026-06-26 · 周五 · 北京时间",
-  count: { total: 46, key: 3, insight: 0 },
-  keyNumbers: [
-    { v:"75", u:"%", lab:"HR 战略工作占比将提升至", src:"Josh Bersin", url:"https://www.prnewswire.com/news-releases/the-josh-bersin-company-launches-bold-blueprint-for-agentic-ai-hr-2030-302793868.html" },
-    { v:"180", u:"万亿", lab:"豆包日均Token调用", src:"火山引擎", url:"https://www.toutiao.com/a7654755851466490391" },
-    { v:"30", u:"×", lab:"AI 做有声内容提速", src:"喜马拉雅", url:"https://cloud.tencent.com/developer/article/2650685" }
-  ],
-  cards: [
-    {
-      no:"01", head:true, grade:"HR × AI · 一手报告", time:"6月8日发布",
-      title:["同样用 AI，有人裁员","有人增值 100 倍"], hi:"增值 100 倍",
-      summary:"全球顶级分析师 Josh Bersin 发布《HR 2030》蓝图，提出 12 条系统性原则：HR 从「流程执行者」转向<b>设计、调教、管理 AI 智能体系统</b>。关键判断——靠 AI 加速招聘与再培训创造的价值，是单纯用 AI 减员的 <b>10–100 倍</b>。HR 团队或缩减 30–50%，但战略工作占比从 30% 升至 75%。",
-      mini:[ {v:"10-100",u:"×",t:"AI赋能vs裁员价值"}, {v:"130",u:"个",t:"可部署HR智能体"},
-             {v:"75",u:"%",t:"战略工作占比目标"} ],
-      sources:[ {name:"PR Newswire",url:"https://www.prnewswire.com/news-releases/the-josh-bersin-company-launches-bold-blueprint-for-agentic-ai-hr-2030-302793868.html"}, {name:"红杉汇",url:"https://www.hongshan.com/article/%E7%9F%A5%E5%90%8D%E5%88%86%E6%9E%90%E5%B8%88%E7%9C%BC%E4%B8%ADhr%E7%9A%84%E6%9C%AA%E6%9D%A5%EF%BC%9A%E7%B3%BB%E7%BB%9F%E6%80%A7%E5%8F%98%E5%8C%96%E5%A4%9A%E8%BE%BE12%E6%9D%A1/"} ],
-      readUrl:"https://www.hongshan.com/article/%E7%9F%A5%E5%90%8D%E5%88%86%E6%9E%90%E5%B8%88%E7%9C%BC%E4%B8%ADhr%E7%9A%84%E6%9C%AA%E6%9D%A5%EF%BC%9A%E7%B3%BB%E7%BB%9F%E6%80%A7%E5%8F%98%E5%8C%96%E5%A4%9A%E8%BE%BE12%E6%9D%A1/"
-    },
-    {
-      no:"02", grade:"AI 行业 · 厂商动态", time:"6月24日发布",
-      title:["豆包大模型 2.1 发布","日均调用 180 万亿 Token"], hi:"180 万亿 Token",
-      summary:"字节火山引擎 FORCE 大会发布豆包大模型 2.1 系列，编程能力已可<b>比肩 Claude Opus 4.7</b>，Agent 长链路执行能力质变。最震撼的信号：<b>日均 Token 调用量突破 180 万亿、两年增长超 1500 倍</b>——这是 AI 真实渗透进千行百业的硬指标。同日推出豆包专业版（68 元/月起）。对互联网从业者：国产大模型已进第一梯队，「Token 消耗」正成为衡量 AI 落地深度的新标尺。",
-      mini:[ {v:"180",u:"万亿",t:"日均Token调用"},
-             {v:"1500",u:"倍",t:"两年调用增长"}, {v:"68",u:"元起",t:"专业版月费"} ],
-      sources:[ {name:"界面新闻",url:"https://www.163.com/dy/article/L06443NQ0534A4SC.html"}, {name:"今日头条AI简报",url:"https://www.toutiao.com/a7654755851466490391"} ],
-      readUrl:"https://www.toutiao.com/a7654755851466490391"
-    },
-    {
-      no:"03", grade:"AI × 内容创作 · 实操分享", time:"2026年峰会披露",
-      title:["前沿实操｜AI 做播客","制作周期从 60 天压到 1 天"], hi:"60 天压到 1 天",
-      summary:"<b>本期实操分享</b>——喜马拉雅音频大模型实践：有声内容制作周期三代演进 <b>60 天 → 30 天 → 1 天（提速 30 倍）</b>，<b>10 秒</b>克隆商用声线、56 种情感合成，单田芳声音重现上线 100+ 专辑、总播放超 <b>1 亿</b>。<b>可上手工作流</b>：选题脚本(LLM)→ AI 配音/克隆音色 → AI 剪辑配字幕 BGM → 一键多平台分发。",
-      mini:[ {v:"30",u:"×",t:"内容制作提速"}, {v:"10",u:"秒",t:"克隆商用声线"},
-             {v:"56",u:"种",t:"情感语音合成"} ],
-      sources:[ {name:"腾讯云开发者",url:"https://cloud.tencent.com/developer/article/2650685"}, {name:"喜马拉雅",url:"https://cloud.tencent.com/developer/article/2650685"} ],
-      readUrl:"https://cloud.tencent.com/developer/article/2650685"
-    }
-  ]
+const REPORTS = {
+  "2026-06-26": {
+    date: "2026-06-26 · 周五 · 北京时间",
+    count: { total: 46, key: 3, insight: 0 },
+    keyNumbers: [
+      { v:"75", u:"%", lab:"HR 战略工作占比将提升至", src:"Josh Bersin", url:"https://www.prnewswire.com/news-releases/the-josh-bersin-company-launches-bold-blueprint-for-agentic-ai-hr-2030-302793868.html" },
+      { v:"180", u:"万亿", lab:"豆包日均Token调用", src:"火山引擎", url:"https://www.toutiao.com/a7654755851466490391" },
+      { v:"30", u:"×", lab:"AI 做有声内容提速", src:"喜马拉雅", url:"https://cloud.tencent.com/developer/article/2650685" }
+    ],
+    cards: [
+      {
+        no:"01", head:true, grade:"HR × AI · 一手报告", time:"6月8日发布",
+        title:["同样用 AI，有人裁员","有人增值 100 倍"], hi:"增值 100 倍",
+        summary:"全球顶级分析师 Josh Bersin 发布《HR 2030》蓝图，提出 12 条系统性原则：HR 从「流程执行者」转向<b>设计、调教、管理 AI 智能体系统</b>。关键判断——靠 AI 加速招聘与再培训创造的价值，是单纯用 AI 减员的 <b>10–100 倍</b>。HR 团队或缩减 30–50%，但战略工作占比从 30% 升至 75%。",
+        mini:[ {v:"10-100",u:"×",t:"AI赋能vs裁员价值"}, {v:"130",u:"个",t:"可部署HR智能体"},
+               {v:"75",u:"%",t:"战略工作占比目标"} ],
+        sources:[ {name:"PR Newswire",url:"https://www.prnewswire.com/news-releases/the-josh-bersin-company-launches-bold-blueprint-for-agentic-ai-hr-2030-302793868.html"}, {name:"红杉汇",url:"https://www.hongshan.com/article/%E7%9F%A5%E5%90%8D%E5%88%86%E6%9E%90%E5%B8%88%E7%9C%BC%E4%B8%ADhr%E7%9A%84%E6%9C%AA%E6%9D%A5%EF%BC%9A%E7%B3%BB%E7%BB%9F%E6%80%A7%E5%8F%98%E5%8C%96%E5%A4%9A%E8%BE%BE12%E6%9D%A1/"} ],
+        readUrl:"https://www.hongshan.com/article/%E7%9F%A5%E5%90%8D%E5%88%86%E6%9E%90%E5%B8%88%E7%9C%BC%E4%B8%ADhr%E7%9A%84%E6%9C%AA%E6%9D%A5%EF%BC%9A%E7%B3%BB%E7%BB%9F%E6%80%A7%E5%8F%98%E5%8C%96%E5%A4%9A%E8%BE%BE12%E6%9D%A1/"
+      },
+      {
+        no:"02", grade:"AI 行业 · 厂商动态", time:"6月24日发布",
+        title:["豆包大模型 2.1 发布","日均调用 180 万亿 Token"], hi:"180 万亿 Token",
+        summary:"字节火山引擎 FORCE 大会发布豆包大模型 2.1 系列，编程能力已可<b>比肩 Claude Opus 4.7</b>，Agent 长链路执行能力质变。最震撼的信号：<b>日均 Token 调用量突破 180 万亿、两年增长超 1500 倍</b>——这是 AI 真实渗透进千行百业的硬指标。同日推出豆包专业版（68 元/月起）。对互联网从业者：国产大模型已进第一梯队，「Token 消耗」正成为衡量 AI 落地深度的新标尺。",
+        mini:[ {v:"180",u:"万亿",t:"日均Token调用"},
+               {v:"1500",u:"倍",t:"两年调用增长"}, {v:"68",u:"元起",t:"专业版月费"} ],
+        sources:[ {name:"界面新闻",url:"https://www.163.com/dy/article/L06443NQ0534A4SC.html"}, {name:"今日头条AI简报",url:"https://www.toutiao.com/a7654755851466490391"} ],
+        readUrl:"https://www.toutiao.com/a7654755851466490391"
+      },
+      {
+        no:"03", grade:"AI × 内容创作 · 实操分享", time:"2026年峰会披露",
+        title:["前沿实操｜AI 做播客","制作周期从 60 天压到 1 天"], hi:"60 天压到 1 天",
+        summary:"<b>本期实操分享</b>——喜马拉雅音频大模型实践：有声内容制作周期三代演进 <b>60 天 → 30 天 → 1 天（提速 30 倍）</b>，<b>10 秒</b>克隆商用声线、56 种情感合成，单田芳声音重现上线 100+ 专辑、总播放超 <b>1 亿</b>。<b>可上手工作流</b>：选题脚本(LLM)→ AI 配音/克隆音色 → AI 剪辑配字幕 BGM → 一键多平台分发。",
+        mini:[ {v:"30",u:"×",t:"内容制作提速"}, {v:"10",u:"秒",t:"克隆商用声线"},
+               {v:"56",u:"种",t:"情感语音合成"} ],
+        sources:[ {name:"腾讯云开发者",url:"https://cloud.tencent.com/developer/article/2650685"}, {name:"喜马拉雅",url:"https://cloud.tencent.com/developer/article/2650685"} ],
+        readUrl:"https://cloud.tencent.com/developer/article/2650685"
+      }
+    ]
+  },
+  "2026-06-29": {
+    date: "2026-06-29 · 周一 · 北京时间",
+    count: { total: 51, key: 3, insight: 0 },
+    keyNumbers: [
+      { v:"7", u:"%", lab:"Alphabet单日最大跌幅", src:"钛媒体", url:"https://www.tmtpost.com/agent/ai-article/18552" },
+      { v:"41", u:"%", lab:"OpenAI推理成本有望降", src:"证券时报", url:"https://www.stcn.com/article/detail/3979939.html" },
+      { v:"30", u:"秒", lab:"Seedance 2.5单次直出", src:"腾讯新闻", url:"https://news.qq.com/rain/a/20260624A0B61A00" }
+    ],
+    cards: [
+      {
+        no:"01", head:true, grade:"AI 行业 · 深度报道", time:"6月24日报道",
+        title:["谷歌 AI 损失两员大将","哈萨比斯却说人才护城河还在？"], hi:"人才护城河",
+        summary:"一周内，Transformer 架构联合作者诺姆·沙泽尔宣布加盟 OpenAI、诺贝尔化学奖得主约翰·江珀转投 Anthropic。Alphabet 股价单日暴跌 <b>7%</b>，创一年最大跌幅。DeepMind CEO 哈萨比斯在戛纳回应：人才流动不等于流失，算力闭环和平台纵深才是无法被复制的竞争壁垒。",
+        mini:[ {v:"7",u:"%",t:"Alphabet单日跌幅"},
+               {v:"27",u:"亿$",t:"谷歌此前请回沙泽尔"} ],
+        sources:[ {name:"钛媒体",url:"https://www.tmtpost.com/agent/ai-article/18552"}, {name:"Semafor",url:"https://www.tmtpost.com/agent/ai-article/18552"} ],
+        readUrl:"https://www.tmtpost.com/agent/ai-article/18552"
+      },
+      {
+        no:"02", grade:"AI 行业 · 芯片/技术", time:"6月25日",
+        title:["OpenAI 不再靠英伟达？","自研芯片推理成本砍 41%"], hi:"砍 41%",
+        summary:"OpenAI 联手博通发布首款自研 AI 推理芯片 Jalapeño，<b>9 个月</b>完成流片。据 K Research 测算，单位有效算力 TCO 可比 GPU 降低约 <b>41%</b>。头部 AI 公司正从「用别人的芯片」走向「自己造芯片」——TrendForce 数据显示，定制 ASIC 出货增速达 44.6%，远超商用 GPU 的 16.1%。",
+        mini:[ {v:"41",u:"%",t:"推理成本预计降幅"},
+               {v:"9",u:"个月",t:"从立项到流片"},
+               {v:"44.6",u:"%",t:"定制ASIC出货增速"} ],
+        sources:[ {name:"证券时报",url:"https://www.stcn.com/article/detail/3979939.html"}, {name:"钛媒体",url:"https://www.tmtpost.com/agent/ai-article/18552"} ],
+        readUrl:"https://www.stcn.com/article/detail/3979939.html"
+      },
+      {
+        no:"03", grade:"AI × 内容创作 · 实操分享", time:"6月23日发布",
+        title:["国产视频模型再捅天花板","Seedance 2.5单次直出30秒4K"], hi:"30秒4K",
+        summary:"字节跳动火山引擎 FORCE 大会发布豆包视频生成模型 Seedance 2.5：首次实现<b>单段原生 30 秒 4K 直出</b>（同类普遍 15–20 秒），支持最多 <b>50 个</b>全模态素材联合输入，新增精细化局部编辑与 3D 白模预览。目前企业内测尾声，预计 <b>7 月初</b>正式上线。同步升级 Seedance 2.0 为原生 4K + 10-bit 高位深。",
+        mini:[ {v:"30",u:"秒",t:"单次原生直出时长"},
+               {v:"50",u:"个",t:"全模态参考素材上限"},
+               {v:"4K",u:"",t:"原生高清输出"} ],
+        sources:[ {name:"腾讯新闻",url:"https://news.qq.com/rain/a/20260624A0B61A00"} ],
+        readUrl:"https://news.qq.com/rain/a/20260624A0B61A00"
+      }
+    ]
+  }
 };
 
-(function(){
+function renderReport(DATA) {
   const $ = id => document.getElementById(id);
   $('dateText').textContent = DATA.date;
-  $('metaLine').textContent = '今日扫描 '+DATA.count.total+' 条 · 过三道质量门后精选 '+DATA.count.key+' 条重点';
+  $('metaLine').textContent = '扫描 '+DATA.count.total+' 条 · 过三道质量门后精选 '+DATA.count.key+' 条重点';
   $('cntText').textContent = DATA.count.key + ' 条';
-
   $('keynums').innerHTML = DATA.keyNumbers.map(k=>{
     const inner = '<div class="big">'+k.v+'<small>'+k.u+'</small></div>'+
                   '<div class="lab">'+k.lab+'</div>'+
@@ -210,8 +284,8 @@ const DATA = {
       ? '<a class="kn" href="'+k.url+'" target="_blank" rel="noopener">'+inner+'</a>'
       : '<div class="kn">'+inner+'</div>';
   }).join('');
-
   const box = $('cards');
+  box.innerHTML = '';
   DATA.cards.forEach(c=>{
     const tags = (c.head?'<span class="tag head">★ 头条</span>':'')+
                  '<span class="tag grade">'+c.grade+'</span>';
@@ -219,9 +293,10 @@ const DATA = {
     const title = c.title.map(line=>
       (c.hi && line.includes(c.hi)) ? line.replace(c.hi,'<span class="k">'+c.hi+'</span>') : line
     ).join('<br>');
-    const mini = c.mini.map(m=>
-      '<div class="m"><div class="v">'+m.v+'<small>'+m.u+'</small></div><div class="t">'+m.t+'</div></div>'
-    ).join('');
+    const mini = c.mini.map(m=>{
+      const u = m.u ? '<small>'+m.u+'</small>' : '';
+      return '<div class="m"><div class="v">'+m.v+u+'</div><div class="t">'+m.t+'</div></div>';
+    }).join('');
     const src = '<span class="lbl">依据 · 来源</span>'+ c.sources.map(s=>
       s.url ? '<a class="s link" href="'+s.url+'" target="_blank" rel="noopener">'+s.name+' &#8599;</a>'
             : '<span class="s">'+s.name+'</span>'
@@ -239,6 +314,56 @@ const DATA = {
       read+
       '</div></div>');
   });
+}
+
+(function(){
+  const dates = Object.keys(REPORTS).sort();
+  const latest = dates[dates.length - 1];
+  let curDate = latest;
+
+  renderReport(REPORTS[curDate]);
+
+  const calBtn = document.getElementById('calBtn');
+  const calOverlay = document.getElementById('calOverlay');
+  const calGrid = document.getElementById('calGrid');
+  const calYM = document.getElementById('calYM');
+  const todayStr = new Date().toISOString().slice(0,10);
+  let calYear = new Date().getFullYear();
+  let calMonth = new Date().getMonth() + 1;
+
+  function buildCal() {
+    calYM.textContent = calYear+' 年 '+calMonth+' 月';
+    const first = new Date(calYear, calMonth-1, 1);
+    const last = new Date(calYear, calMonth, 0);
+    const wks = ['日','一','二','三','四','五','六'];
+    let h = wks.map(w=>'<div class="wk">'+w+'</div>').join('');
+    let d = first.getDay();
+    for(let i=1;i<=last.getDate();i++) {
+      const ds = calYear+'-'+String(calMonth).padStart(2,'0')+'-'+String(i).padStart(2,'0');
+      const has = !!REPORTS[ds];
+      let cls = 'dy';
+      if (has) cls += ' has';
+      if (ds === todayStr) cls += ' today';
+      if (ds === curDate) cls += ' active';
+      h += '<div class="'+cls+'" data-date="'+ds+'">'+i+'</div>';
+    }
+    calGrid.innerHTML = h;
+  }
+
+  calBtn.onclick = () => { calOverlay.classList.add('on'); buildCal(); };
+  calOverlay.onclick = e => { if (e.target === calOverlay) calOverlay.classList.remove('on'); };
+  document.getElementById('calPrev').onclick = () => { if (calMonth===1) { calYear--; calMonth=12; } else calMonth--; buildCal(); };
+  document.getElementById('calNext').onclick = () => { if (calMonth===12) { calYear++; calMonth=1; } else calMonth++; buildCal(); };
+  calGrid.onclick = e => {
+    const el = e.target.closest('.dy.has');
+    if (!el) return;
+    curDate = el.dataset.date;
+    renderReport(REPORTS[curDate]);
+    calOverlay.classList.remove('on');
+  };
+
+  const bdot = document.getElementById('bdot');
+  if (!REPORTS[todayStr]) bdot.style.display = 'none';
 })();
 </script>
 </body>
