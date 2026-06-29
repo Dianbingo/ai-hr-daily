@@ -19,8 +19,11 @@
     -webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:480px;margin:0 auto;min-height:100vh;
-    background:linear-gradient(180deg,#F6F4FE 0%,#ECE8FC 100%);
+    background:linear-gradient(180deg,#FEF9EF 0%,#F6F4FE 30%,#ECE8FC 100%);
     padding:0 18px 40px;position:relative;overflow:hidden}
+  .wrap::before{content:"";position:absolute;top:0;left:0;right:0;height:180px;
+    background:linear-gradient(180deg,rgba(255,210,140,.18) 0%,rgba(255,190,100,.06) 60%,transparent 100%);
+    pointer-events:none;z-index:0}
 
   /* top nav */
   .nav{position:sticky;top:0;z-index:20;background:rgba(246,244,254,.86);
@@ -62,13 +65,31 @@
   .center{display:flex;justify-content:center}
 
   /* hero */
-  .hero{text-align:center;margin-top:18px}
-  .hero h1{font-size:30px;line-height:1.25;font-weight:800;letter-spacing:.5px}
-  .hero h1 .k{position:relative;color:var(--orange);z-index:1}
-  .hero h1 .k::after{content:"";position:absolute;left:-2px;right:-2px;bottom:2px;height:10px;
-    background:var(--hi);z-index:-1;border-radius:3px}
-  .hero p{font-size:14px;color:var(--ink2);line-height:1.7;margin-top:14px;padding:0 6px}
-  .hero p b{color:var(--orange-d);font-weight:600}
+  .hero{text-align:center;margin-top:22px;position:relative}
+  .hero::before{content:"";position:absolute;top:-36px;right:20px;width:90px;height:90px;
+    background:radial-gradient(circle,rgba(255,210,120,.4) 0%,rgba(255,190,90,.2) 35%,transparent 70%);
+    border-radius:50%;pointer-events:none;z-index:0}
+  .hero h1{position:relative;z-index:1;font-size:34px;line-height:1.3;font-weight:900;letter-spacing:1px;color:var(--ink)}
+  .hero h1 .hl{
+    background:linear-gradient(135deg,var(--orange) 0%,#8678F0 40%,var(--amber) 70%,var(--orange-d) 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text}
+  .hero h1 .sub{font-weight:600;letter-spacing:2px;font-size:.88em;color:var(--ink)}
+  .hero .tagline{display:inline-flex;align-items:center;gap:8px;
+    margin-top:16px;padding:8px 18px;
+    background:linear-gradient(135deg,rgba(110,91,230,.08),rgba(157,143,240,.12));
+    border:1px solid rgba(110,91,230,.18);
+    border-radius:20px;font-size:13px;color:var(--orange-d);font-weight:500;
+    letter-spacing:.3px;line-height:1.5}
+  .hero .tagline::before{content:"";display:inline-block;width:6px;height:6px;
+    border-radius:50%;background:var(--orange);
+    box-shadow:0 0 8px rgba(110,91,230,.5);animation:pulse-dot 2s ease-in-out infinite}
+  @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+  .hero .tagline b{color:var(--orange);font-weight:700}
+  .sun{position:absolute;top:-18px;right:24px;width:62px;height:62px;z-index:0;
+    animation:sunrise 4s ease-out infinite alternate;filter:drop-shadow(0 0 8px rgba(255,180,60,.25))}
+  @keyframes sunrise{0%{opacity:.7}100%{opacity:1}}
+  .cloud{position:absolute;top:12px;left:8px;width:90px;height:40px;z-index:0;opacity:.7}
   .meta-line{text-align:center;font-size:12px;color:var(--ink3);margin-top:12px}
 
   /* key numbers */
@@ -160,8 +181,10 @@
   <div class="center"><div class="date"><span class="gdot"></span><span id="dateText"></span></div></div>
 
   <div class="hero">
-    <h1>近日 <span class="k">AI+HR</span> 发生了什么</h1>
-    <p>聚焦<b>有方法、有前沿、能落地</b>：从 AI 赋能 HR、AI 与互联网行业趋势，到 AI 内容创作前沿分享。</p>
+    <svg class="sun" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="sg" cx="50%" cy="50%"><stop offset="0%" stop-color="#FFF3CD"/><stop offset="40%" stop-color="#FFD976"/><stop offset="100%" stop-color="#FFB84D" stop-opacity="0"/></radialGradient></defs><circle cx="40" cy="40" r="28" fill="url(#sg)"/><circle cx="40" cy="40" r="14" fill="#FFC04D" opacity=".9"/><g stroke="#FFD976" stroke-width="2.5" stroke-linecap="round" opacity=".5"><line x1="40" y1="6" x2="40" y2="14"/><line x1="40" y1="66" x2="40" y2="74"/><line x1="14" y1="40" x2="6" y2="40"/><line x1="74" y1="40" x2="66" y2="40"/><line x1="21" y1="21" x2="16" y2="16"/><line x1="64" y1="64" x2="59" y2="59"/><line x1="59" y1="21" x2="64" y2="16"/><line x1="21" y1="59" x2="16" y2="64"/></g></svg>
+    <svg class="cloud" viewBox="0 0 120 50" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="35" r="16" fill="rgba(255,255,255,.7)"/><circle cx="58" cy="24" r="20" fill="rgba(255,255,255,.7)"/><circle cx="88" cy="32" r="14" fill="rgba(255,255,255,.7)"/><rect x="16" y="34" width="86" height="16" rx="8" fill="rgba(255,255,255,.7)"/></svg>
+    <h1><span class="hl">AI &times; HR</span> <span class="sub">晨间速递</span></h1>
+    <div class="tagline">每天 3 分钟 读懂 AI+HR 新趋势</div>
     <div class="meta-line" id="metaLine"></div>
   </div>
 
@@ -183,7 +206,7 @@
   <div class="foot">
     每天 <b>3 分钟</b> 读懂 AI+HR
     <div class="tagrow">
-      <span>#AI+HR</span><span>#HR日报</span><span>#AI裁员</span><span>#HR科技</span><span>#欧盟AI法案</span>
+      <span>#AI赋能HR</span><span>#AI人才趋势</span><span>#HR科技工具</span><span>#AI政策与合规</span>
     </div>
     <p class="disclaim">内容由 AI 辅助整理，结论与数据请以原文为准</p>
   </div>
@@ -268,6 +291,45 @@ const REPORTS = {
         readUrl:"https://news.qq.com/rain/a/20260624A0B61A00"
       }
     ]
+  },
+  "2026-06-30": {
+    date: "2026-06-30 · 周二 · 北京时间",
+    count: { total: 48, key: 3, insight: 0 },
+    keyNumbers: [
+      { v:"8,700", u:"万", lab:"北森AI产品新签合同额", src:"腾讯新闻", url:"https://new.qq.com/rain/a/20260624A0AI2G00" },
+      { v:"3.45", u:"亿", lab:"豆包月活", src:"灰度打车" },
+      { v:"60", u:"%", lab:"WorkRally漫剧成本降幅", src:"工人日报", url:"https://www.workercn.cn/c/2026-06-27/8833832.shtml" }
+    ],
+    cards: [
+      {
+        no:"01", head:true, grade:"HR × AI · 厂商动态", time:"6月24日发布",
+        title:["HR 的「数字同事」上线了？","北森 AI HR 专家平台已上千企业在用"], hi:"数字同事",
+        summary:"北森控股（9669.HK）发布 2026 财年业绩并官宣：从传统 HR 软件厂商全面升级为 AI 应用公司，推出国内首个一站式 AI HR 专家平台 Mavens。2026 财年营收 <b>11.05 亿元</b>（同比增 16.9%），AI 产品新签合同 <b>8,700 万元</b>（同比增 <b>10 倍</b>），已服务 <b>1,400+</b> 家企业客户。蒙牛、海尔、长安汽车、奇瑞、茶颜悦色等头部企业已落地。未来两年计划投入 <b>10 亿元</b> All in AI。",
+        mini:[ {v:"8,700",u:"万",t:"AI产品新签合同额"},
+               {v:"1,400",u:"+",t:"已服务企业客户"},
+               {v:"10",u:"亿",t:"未来两年AI投入"} ],
+        sources:[ {name:"腾讯新闻",url:"https://new.qq.com/rain/a/20260624A0AI2G00"}, {name:"TechWeb",url:"https://new.qq.com/rain/a/20260624A0AI2G00"} ],
+        readUrl:"https://new.qq.com/rain/a/20260624A0AI2G00"
+      },
+      {
+        no:"02", grade:"AI 行业 · 产品趋势", time:"6月中下旬",
+        title:["大厂终于不逼你装 App 了","微信、支付宝把 AI 藏进主页"], hi:"藏进主页",
+        summary:"6 月中下旬，微信灰度内测原生 AI 助手「小微」（首页唤起，可点外卖、查快递、总结朋友圈），支付宝推出 AI 版内置智能体「阿宝」。大厂不再让用户单独下载 AI App，而是把 AI 藏进日活数亿的应用里。三家路线分化：阿里自建闭环（千问接入淘宝/高德/饿了么）、字节规模驱动（豆包月活 <b>3.45 亿</b> 灰度打车）、腾讯生态协同（微信 <b>13 亿</b> 用户 + 小程序 + 支付闭环）。",
+        mini:[ {v:"13",u:"亿",t:"微信月活用户基数"},
+               {v:"3.45",u:"亿",t:"豆包月活"} ],
+        sources:[ {name:"钛媒体",url:"https://www.tmtpost.com/8041685.html"}, {name:"搜狐科技",url:"https://yule.sohu.com/a/1040027444_121332524"} ],
+        readUrl:"https://www.tmtpost.com/8041685.html"
+      },
+      {
+        no:"03", grade:"AI × 内容创作 · 实操分享", time:"6月24日发布",
+        title:["腾讯 WorkRally AI 平台再进化","漫剧制作成本降 60%"], hi:"降 60%",
+        summary:"6 月 24 日腾讯视频年度发布会：WorkRally 从 AI 漫剧扩展到专业影视和精品动画版本。超 <b>130 家</b>企业机构已常态化使用漫剧版量产，制作成本降低 <b>60%</b>，大幅压缩周期、减少返工。影视动画版已有 <b>60+ 项目</b>接入。火龙漫剧沉淀 <b>7 万部</b>作品，连接 <b>2 万+</b>创作者。",
+        mini:[ {v:"60",u:"%",t:"漫剧制作成本降幅"},
+               {v:"130",u:"+",t:"企业机构常态化使用"} ],
+        sources:[ {name:"工人日报",url:"https://www.workercn.cn/c/2026-06-27/8833832.shtml"} ],
+        readUrl:"https://www.workercn.cn/c/2026-06-27/8833832.shtml"
+      }
+    ]
   }
 };
 
@@ -319,7 +381,16 @@ function renderReport(DATA) {
 (function(){
   const dates = Object.keys(REPORTS).sort();
   const latest = dates[dates.length - 1];
-  let curDate = latest;
+
+  // 北京时间今天
+  const now = new Date();
+  const beijing = new Date(now.toLocaleString("en-US", {timeZone:"Asia/Shanghai"}));
+  const todayStr = beijing.getFullYear()+'-'+
+    String(beijing.getMonth()+1).padStart(2,'0')+'-'+
+    String(beijing.getDate()).padStart(2,'0');
+
+  // 若有今日内容则显示今日，否则显示最新一期
+  let curDate = REPORTS[todayStr] ? todayStr : latest;
 
   renderReport(REPORTS[curDate]);
 
@@ -327,9 +398,8 @@ function renderReport(DATA) {
   const calOverlay = document.getElementById('calOverlay');
   const calGrid = document.getElementById('calGrid');
   const calYM = document.getElementById('calYM');
-  const todayStr = new Date().toISOString().slice(0,10);
-  let calYear = new Date().getFullYear();
-  let calMonth = new Date().getMonth() + 1;
+  let calYear = beijing.getFullYear();
+  let calMonth = beijing.getMonth() + 1;
 
   function buildCal() {
     calYM.textContent = calYear+' 年 '+calMonth+' 月';
