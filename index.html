@@ -52,6 +52,7 @@
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;gap:4px}
   .cal-grid .wk{font-size:11px;color:var(--ink3);padding:6px 0}
   .cal-grid .dy{font-size:13px;padding:8px 0;border-radius:10px;cursor:default;color:#C8C4D6}
+  .cal-grid .dy.empty{pointer-events:none}
   .cal-grid .dy.has{background:var(--soft);color:var(--orange-d);font-weight:700;cursor:pointer}
   .cal-grid .dy.has:active{background:var(--chip)}
   .cal-grid .dy.today{border:1.5px solid var(--orange)}
@@ -449,7 +450,11 @@ function renderReport(DATA) {
     const last = new Date(calYear, calMonth, 0);
     const wks = ['日','一','二','三','四','五','六'];
     let h = wks.map(w=>'<div class="wk">'+w+'</div>').join('');
-    let d = first.getDay();
+    // 补位：1号之前的空白格
+    const startDay = first.getDay();
+    for (let i = 0; i < startDay; i++) {
+      h += '<div class="dy empty"></div>';
+    }
     for(let i=1;i<=last.getDate();i++) {
       const ds = calYear+'-'+String(calMonth).padStart(2,'0')+'-'+String(i).padStart(2,'0');
       const has = !!REPORTS[ds];
