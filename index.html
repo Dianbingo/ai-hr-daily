@@ -135,6 +135,9 @@
   .card h3 .k{color:var(--orange)}
   .card .sum{font-size:13.5px;color:var(--ink2);line-height:1.7;margin-top:10px}
   .card .sum b{color:var(--ink);font-weight:600}
+  .card .cimg{margin-top:14px;border-radius:14px;overflow:hidden}
+  .card .cimg img{display:block;width:100%;height:auto}
+  .card .cimg-cap{background:#F7F5FD;color:var(--ink2);font-size:12px;padding:8px 12px;line-height:1.5}
 
   .mini{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
   .mini .m{background:#F7F5FD;border:1px solid #EAE6F8;border-radius:12px;padding:13px 12px;text-align:center}
@@ -373,6 +376,47 @@ const REPORTS = {
         readUrl:"https://new.qq.com/rain/a/20260618A09G5500"
       }
     ]
+  },
+  "2026-07-02": {
+    date: "2026-07-02 · 周四 · 北京时间",
+    count: { total: 50, key: 3, insight: 0 },
+    keyNumbers: [
+      { v:"2.1", u:"万", lab:"甲骨文一年被AI裁掉人数", src:"环球市场播报", url:"https://baijiahao.baidu.com/s?id=1868788070812757043" },
+      { v:"60", u:"%+", lab:"小红书世界杯男性观播率", src:"界面新闻", url:"https://www.jiemian.com/article/14598690.html" },
+      { v:"100", u:"万", lab:"抖音混拍短剧S级最高保底", src:"澎湃新闻", url:"https://www.thepaper.cn/newsDetail_forward_33447233" }
+    ],
+    cards: [
+      {
+        no:"01", head:true, grade:"AI × 人才与就业", time:"6月26日发布",
+        image:"oracle-office.jpg",
+        title:["当AI员工开始吃掉自己的人类同事","甲骨文官宣数据：一年裁减了2.1万个岗位"], hi:"2.1万个岗位",
+        summary:"甲骨文上周的年度监管文件中表示，过去 12 个月公司裁员 <b>13%</b>，裁员原因包含人工智能技术的规模化落地应用。甲骨文坦言，人员架构调整会带来诸多负面影响，不仅推高重组成本，还会造成阶段性生产效率下滑。此次裁员与甲骨文斥资大规模兴建 AI 数据中心的财务压力密切相关。大规模削减人力成本的背后，是该公司为维系 OpenAI 等客户所需的高额基础设施投入。",
+        mini:[ {v:"2.1万",u:"",t:"甲骨文一年裁员（13%）"},
+               {v:"18亿",u:"$",t:"重组相关支出"} ],
+        sources:[ {name:"环球市场播报",url:"https://baijiahao.baidu.com/s?id=1868788070812757043"}, {name:"华尔街见闻",url:"https://baijiahao.baidu.com/s?id=1868764131885320830"} ],
+        readUrl:"https://baijiahao.baidu.com/s?id=1868788070812757043"
+      },
+      {
+        no:"02", grade:"行业热点 · 平台动向", time:"7月1日",
+        title:["世界杯淘汰赛开打","小红书携手央视实现体育破圈"], hi:"体育破圈",
+        image:"worldcup-rednote.jpg",
+        summary:"赛事开播至今，CCTV-5 收视份额环比大涨 <b>118%</b>（来源②）。小红书依托重磅赛事资源，与总台合作不断向多元、深度升级，实现品牌声量与内容价值的双向跃升。一是依托世界杯核心传播场景，高频曝光品牌、强化认知记忆。二是联合推出《正午聊球局》，打造边看边聊的观赛新模式。此前小红书就已披露数据，开赛前三日直播间球迷累计互动次数达到 <b>9000 万次</b>，其中<b>男性用户占比超过 60%</b>（来源①）。这是小红书从她经济破圈体育的关键一战。",
+        mini:[ {v:"118",u:"%",t:"CCTV-5 收视份额环比涨幅"},
+               {v:"60",u:"%+",t:"小红书男性观播用户"} ],
+        sources:[ {name:"界面新闻",url:"https://www.jiemian.com/article/14598690.html"}, {name:"央视网",url:"https://1118.cctv.cn/2026/07/01/ARTItlcqFlQrhYYWytpksKZ3260701.shtml"} ],
+        readUrl:"https://www.jiemian.com/article/14598690.html"
+      },
+      {
+        no:"03", grade:"AI × 内容创作 · 短剧", time:"6月25日",
+        title:["抖音首设真人+AI混拍激励","大批量混拍短剧即将来袭"], hi:"混拍短剧",
+        image:"short-drama-fengling.jpg", imageCap:"典型案例《风凌北冽》位居玄幻仙侠热播榜第一名",
+        summary:"抖音短剧版权中心宣布面向未上线竖屏真人短剧征集<b>「真人主演、AI 结合制作」</b>的作品，这是平台首次向该类型短剧释放出明确的扶持信号。有短剧制片人透露，只要真人实拍比例达到 <b>30% 至 35% 以上</b>，就会被纳入真人剧榜单参与竞争。混拍保留了真人表演的感染力，同时借助 AI 承接场景搭建与特效制作，得以突破纯实拍在题材与视觉表达上的边界。<b>「AI 赛道现在太混乱，制作成本低，充斥大量劣币。混拍剧按真人剧上线参与竞争，相对更容易跑出来。」</b>",
+        mini:[ {v:"100",u:"万",t:"S级混拍短剧最高保底"},
+               {v:"30%+",u:"",t:"真人实拍比例门槛"} ],
+        sources:[ {name:"澎湃新闻",url:"https://www.thepaper.cn/newsDetail_forward_33447233"} ],
+        readUrl:"https://www.thepaper.cn/newsDetail_forward_33447233"
+      }
+    ]
   }
 };
 
@@ -409,11 +453,13 @@ function renderReport(DATA) {
     const read = c.readUrl
       ? '<a class="readmore" href="'+c.readUrl+'" target="_blank" rel="noopener"><span>查看原文 · 追溯细节</span><span class="arr">&#8594;</span></a>'
       : '<div class="readmore disabled"><span>原文链接待补充</span><span class="arr">&#8594;</span></div>';
+    const img = c.image ? '<div class="cimg"><img src="'+c.image+'" alt="">'+(c.imageCap?'<div class="cimg-cap">'+c.imageCap+'</div>':'')+'</div>' : '';
     box.insertAdjacentHTML('beforeend',
       '<div class="card"><div class="bar"></div><div class="pad">'+
       '<div class="crow"><span class="no">'+c.no+'</span>'+tags+time+'</div>'+
       '<h3>'+title+'</h3>'+
       '<div class="sum">'+c.summary+'</div>'+
+      img+
       '<div class="mini">'+mini+'</div>'+
       '<div class="src">'+src+'</div>'+
       read+
